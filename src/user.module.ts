@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CqrsModule } from '@nestjs/cqrs';
+import { CreateUserHandler } from './cqrs/commands/handlers/create.handler';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { User } from './user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forRoot({
+  imports: [CqrsModule,TypeOrmModule.forFeature([User]),TypeOrmModule.forRoot({
     type:'mysql',
     host:'localhost',
     port:3306,
@@ -16,6 +18,6 @@ import { User } from './user.entity';
     synchronize:true
   })],
   controllers: [UserController],
-  providers: [UserService],
+  providers: [UserService,CreateUserHandler],
 })
 export class UserModule {}

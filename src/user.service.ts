@@ -1,13 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { MessagePattern,Payload } from '@nestjs/microservices';
-import { SignUpDto } from './dtos/createuser.dto';
+import { CommandBus } from '@nestjs/cqrs';
+import { CreateUserDto } from './dtos/createuser.dto';
 import { IUser } from './interfaces/user';
 import { UpdateUserDto } from './dtos/update.user.dto';
 import { User } from './user.entity';
+import { CreateCommand } from './cqrs/commands/imp/create.command';
 @Injectable()
 export class UserService implements IUser {
-  createUser(user: SignUpDto): User {
-    throw new Error('Method not implemented.');
+ constructor(private readonly commandBus:CommandBus){}
+  async createUser(user: CreateUserDto): Promise<User> {
+   const result= await this.commandBus.execute(CreateCommand);
+   return result
   }
   updateUser(user: UpdateUserDto): User {
     throw new Error('Method not implemented.');
